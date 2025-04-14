@@ -8,9 +8,26 @@ a, .btn-link {
 }
 
 .btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    color: #000f;
+    background-color: #34D997;
+    border-color: #000f;
+}
+
+.btn-secondary {
+    color: #000f;
+    background-color: #4F959D;
+    border-color: #000f;
+}
+
+.btn-third {
+    color: #000f;
+    background-color: #DD99DD;
+    border-color: #000f;
+}
+
+.image-pick {
+    margin: 50 50 50 50;
+    background-color: #D9D9D9;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
