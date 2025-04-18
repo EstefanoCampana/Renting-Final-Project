@@ -1,6 +1,21 @@
 ﻿@page "/customer"
 
-<h3>Customer</h3>
+<div class="d-flex justify-content-center pb-5">
+    <h1 class="fw-bold">Customer</h1>
+</div>
+
+<div class="d-flex justify-content-around">
+    <div class="m-x-0">
+        <NavLink class="btn btn-primary btn-lg" href="addCustomer">Add New Customer</NavLink>
+    </div>
+    <div class="m-x-0">
+        <NavLink class="btn btn-secondary btn-lg" href="viewCustomers">View Customers</NavLink>
+    </div>
+    <div class="m-x-0">
+        <NavLink class="btn btn-fourth btn-lg" href="updateCustomer">Update Customer</NavLink>
+    </div>
+</div>
+
 
 @code {
 

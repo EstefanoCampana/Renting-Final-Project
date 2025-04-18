@@ -25,6 +25,18 @@ a, .btn-link {
     border-color: #000f;
 }
 
+.btn-fourth {
+    color: #000f;
+    background-color: #99AFDD;
+    border-color: #000f;
+}
+
+.btn-fifth {
+    color: #000f;
+    background-color: #8E6F8F;
+    border-color: #000f;
+}
+
 .image-pick {
     margin: 50 50 50 50;
     background-color: #D9D9D9;
