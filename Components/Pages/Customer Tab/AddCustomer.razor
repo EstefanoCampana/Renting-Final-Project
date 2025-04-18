@@ -1,4 +1,69 @@
-﻿
-@code {
+﻿@page "/addCustomer"
+@using System.ComponentModel.DataAnnotations
 
+<div class="d-flex justify-content-center pb-5">
+    <h1 class="fw-bold">Customer Registration</h1>
+</div>
+
+<div class="border p-4 rounded shadow-sm bg-light">
+    <EditForm Model="customer" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label text-center w-100">First Name</label>
+                <InputText @bind-Value="customer.FirstName" class="form-control" />
+                <ValidationMessage For="@(() => customer.FirstName)" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label text-center w-100">Last Name</label>
+                <InputText @bind-Value="customer.LastName" class="form-control" />
+                <ValidationMessage For="@(() => customer.LastName)" />
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label text-center w-100">Contact Number</label>
+            <InputText @bind-Value="customer.ContactNumber" class="form-control" />
+            <ValidationMessage For="@(() => customer.ContactNumber)" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label text-center w-100">Email</label>
+            <InputText @bind-Value="customer.Email" class="form-control" />
+            <ValidationMessage For="@(() => customer.Email)" />
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+    </EditForm>
+</div>
+
+@code {
+    private Customer customer = new();
+
+    private void HandleValidSubmit()
+    {
+        Console.WriteLine($"Submitted: {customer.FirstName} {customer.LastName}");
+    }
+
+    public class Customer
+    {
+        [Required(ErrorMessage = "First name is required")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Last name is required")]
+        public string LastName { get; set; }
+
+        [Required(ErrorMessage = "Contact number is required")]
+        [Phone(ErrorMessage = "Invalid phone number")]
+        public string ContactNumber { get; set; }
+
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string Email { get; set; }
+    }
 }
