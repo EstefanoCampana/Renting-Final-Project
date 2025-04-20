@@ -188,6 +188,31 @@ a, .btn-link {
     cursor: pointer;
 }
 
+.page-controls {
+    padding: 20px 40px;
+    box-sizing: border-box;
+    height: 100vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.search-sort {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    font-size: 18px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 10px 10px 10px 10px;
+}
+
+
+.header-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
