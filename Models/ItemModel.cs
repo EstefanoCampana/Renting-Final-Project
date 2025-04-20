@@ -13,6 +13,7 @@ namespace Renting.Models
         public double Cost { get; set; }
         public string Category { get; set; }
         public string Description { get; set; }
+        public string ImageBase64 { get; set; }
 
         public ItemModel() { }
         public ItemModel(string title, double cost, string category, string description)

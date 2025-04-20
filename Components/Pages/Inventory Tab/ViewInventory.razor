@@ -7,9 +7,12 @@
     {
         <div class="card">
             <div class="card-image">
-                <img src="your-image.jpg" alt="Equipment" />
+                @if (!string.IsNullOrEmpty(items[0].ImageBase64))
+                {
+                    <img src="data:image/png;base64,@items[0].ImageBase64" alt="Preview" />
+                }
             </div>
-            <div class="card-label">Equipment Preview</div>
+            <div class="card-label">@items[0].Title</div>
         </div>
     }
     else
@@ -18,15 +21,21 @@
         {
             <div class="card">
                 <div class="card-image">
-                    <img src="your-image.jpg" alt="Equipment" />
+                    @if (!string.IsNullOrEmpty(item.ImageBase64))
+                    {
+                        <img src="data:image/png;base64,@item.ImageBase64" alt="Preview" />
+                    }
                 </div>
-                <div class="card-label">Equipment Preview</div>
+                <div class="card-label">@item.Title</div>
             </div>
         }
     }
 </div>
 
 @code{
+
     List<ItemModel> items = ItemModelManager.GetItems();
+
+
 }
 
