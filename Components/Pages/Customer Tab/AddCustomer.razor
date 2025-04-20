@@ -1,5 +1,6 @@
 ﻿@page "/addCustomer"
 @using System.ComponentModel.DataAnnotations
+@using Renting.Models
 
 <div class="d-flex justify-content-center pb-5">
     <h1 class="fw-bold">Customer Registration</h1>
@@ -45,11 +46,6 @@
 @code {
     private Customer customer = new();
 
-    private void HandleValidSubmit()
-    {
-        Console.WriteLine($"Submitted: {customer.FirstName} {customer.LastName}");
-    }
-
     public class Customer
     {
         [Required(ErrorMessage = "First name is required")]
@@ -66,4 +62,10 @@
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; }
     }
+
+    private void HandleValidSubmit()
+    {
+        Console.WriteLine($"Submitted: {customer.FirstName} {customer.LastName}");
+    }
+
 }

@@ -1,44 +1,103 @@
 ﻿@page "/addItem"
 
 <div class="d-flex justify-content-between">
-	<div class="container-md image-pick">
-		<p>Equipment Preview</p>
-	</div>
-    <EditForm Model="@itemModel">
-        <div class="form-group mb-3">
-            <label for="title">Title</label>
-            <InputText id="title" class="form-control" @bind-Value="itemModel.Title" />
-        </div>
+    <div class="image-pick">
+        <p>Equipment Preview</p>
+    </div>
+    <div class="image-pick">
+        <EditForm Model="@itemModel">
+            <div class="form-group mb-3">
+                <label for="title">Title</label>
+                <InputText id="title" class="form-control" @bind-Value="itemModel.Title" />
+            </div>
 
-        <div class="form-group my-4">
-            <label for="author">Author</label>
-            <InputText id="author" class="form-control" @bind-Value="itemModel.Author" />
-        </div>
+            <div class="form-group mb-3">
+                <label for="category">Category </label>
+                <InputSelect class="form-select" @bind-Value="itemModel.Category">
+                    @foreach (string category in ItemModelManager.categories)
+                    {
+                        <option value=@category>@category</option>
+                    }
+                    <option>Any...</option>
+                </InputSelect>
+                <button class="btn-primary" @onclick="() => AddCategory()">Add Category</button>
+            </div>
 
-        <div class="form-group mb-3">
-            <label for="category">Category</label>
-            <InputText id="category" class="form-control" @bind-Value="itemModel.Category" />
-        </div>
+            <div class="form-group mb-3">
+                <label for="description">Description (Up to 100 characters)</label>
+                <InputTextArea class="form-control" maxlength="100" @bind-Value="itemModel.Description" />
+            </div>
 
-        <div class="form-group mb-3">
-            <label for="description">Description</label>
-            <InputTextArea class="form-control" @bind-Value="itemModel.Description" />
-        </div>
+            <div class="form-group my-4">
+                <label for="cost">Cost</label>
+                <InputNumber id="cost" class="form-control" @bind-Value="itemModel.Cost" />
+            </div>
 
-        <div class="text-center">
-            <button class="btn btn-primary mb-3">Update book</button>
-        </div>
-    </EditForm>
+            <div class="text-center">
+                <button @onclick="() => AddsItem()" class="btn btn-primary mb-3">Add Item</button>
+            </div>
+        </EditForm>
+    </div>
 </div>
 
-@code {
-    private ItemModel itemModel = new ItemModel();
+@if (!string.IsNullOrEmpty(ItemModelManager.errorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @ItemModelManager.errorMessage
+    </div>
+}
 
-    public class ItemModel
+@code {
+    private ItemModel itemModel { get; set; } = new ItemModel();
+    private ItemModelManager itemManager = new ItemModelManager();
+    private List<ItemModel> items = ItemModelManager.items;
+
+    public async Task AddsItem()
     {
-        public string Title { get; set; }
-        public string Author { get; set; }
-        public string Category { get; set; }
-        public string Description { get; set; }
+        string message = $"Item has been saved succesfully.";
+        try
+        {
+            if (String.IsNullOrEmpty(itemModel.Title))
+            {
+                ItemModelManager.errorMessage = "Please fill all entries";
+            }
+            else
+            {
+                ItemModelManager.errorMessage = "";
+                ItemModelManager.items.Add(itemModel);
+                ItemModelManager.AddItem();
+                await App.Current.MainPage.DisplayAlert("Success", $"{message}", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            ItemModelManager.errorMessage = ex.Message;
+        }
     }
+
+    public async Task AddCategory()
+    {
+
+        try
+        {
+            string result = await App.Current.MainPage.DisplayPromptAsync("Add Category", "Name of the Category", "OK", "Cancel", "Any Category", 20);
+            if (result == null)
+            {
+                await App.Current.MainPage.DisplayAlert("Exception", "Category cannot be null!", "OK");
+                return;
+
+            }
+            else
+            {
+                ItemModelManager.categories.Add(result);
+                return;
+            }
+            ItemModelManager.errorMessage = "";
+        }
+        catch (Exception ex)
+        {
+            ItemModelManager.errorMessage = ex.Message;
+        }
+    }
+
 }
