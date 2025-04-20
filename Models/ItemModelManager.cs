@@ -31,18 +31,11 @@ namespace Renting.Models
             List<ItemModel> items = new List<ItemModel>();
             try
             {
-                if (File.Exists(JSONPATH) == true)
-                {
                     var content = File.ReadAllText(JSONPATH);
                     var filecontent = JsonSerializer.Deserialize<List<ItemModel>>(content);
                     items.AddRange(filecontent);
                     return items;
-                }
-                else
-                {
-                    File.Create(JSONPATH);
-                    return items;
-                }
+
             }
             catch (Exception ex)
             {
@@ -68,6 +61,17 @@ namespace Renting.Models
             {
                 errorMessage = ex.Message;
                 return uniqueCategories.ToList();
+            }
+        }
+
+        public static void DeleteItem(ItemModel targetItem)
+        {
+            foreach(ItemModel item in ItemModelManager.GetItems())
+            {
+                if(item == targetItem)
+                {
+                    ItemModelManager.GetItems().Remove(item);
+                }
             }
         }
     }

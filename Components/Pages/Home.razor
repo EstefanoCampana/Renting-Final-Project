@@ -10,9 +10,26 @@
         <NavLink class="btn btn-primary btn-lg" href="rent">Rent</NavLink>
     </div>
     <div class="mx-0">
-        <NavLink class="btn btn-secondary btn-lg" href="inventory">Inventory</NavLink>
+        <NavLink class="btn btn-secondary btn-lg" href="inventory" @onclick="() => createJSON()">Inventory</NavLink>
     </div>
     <div class="mx-0">
         <NavLink class="btn btn-fifth btn-lg" href="customer">Customer</NavLink>
     </div>
 </div>
+
+@code{
+
+    public void createJSON()
+    {
+        if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\Resources\Res\items_data.json")) == true)
+        {
+            return;
+        }
+        else
+        {
+            File.Create(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\Resources\Res\items_data.json"));
+        }
+
+    }
+
+}
