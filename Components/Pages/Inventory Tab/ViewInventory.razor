@@ -3,23 +3,29 @@
 <h3>Inventory</h3>
 
 <div class="grid-container">
-    @if(items.Count <= 1)
+    @if(items.Count < 1)
     {
-        <div class="card">
+        <div class="card" @onclick="() => showInfo = true">
             <div class="card-image">
-                @if (!string.IsNullOrEmpty(items[0].ImageBase64))
-                {
-                    <img src="data:image/png;base64,@items[0].ImageBase64" alt="Preview" />
-                }
             </div>
-            <div class="card-label">@items[0].Title</div>
+            <div class="card-label">Equipment Preview</div>
         </div>
+        @if (showInfo)
+        {
+            <div class="modal-overlay" @onclick="() => showInfo = false"></div>
+
+            <div class="modal-sheet">
+                <h5>Information</h5>
+                <p>This is an example popup info sheet you can use in your app.</p>
+                <button class="btn btn-primary" @onclick="() => showInfo = false">Close</button>
+            </div>
+        }
     }
     else
     {
         @foreach (ItemModel item in items)
         {
-            <div class="card">
+            <div class="card" @onclick="() => SetSelected(item.Id)">
                 <div class="card-image">
                     @if (!string.IsNullOrEmpty(item.ImageBase64))
                     {
@@ -29,13 +35,92 @@
                 <div class="card-label">@item.Title</div>
             </div>
         }
+        @if (showInfo)
+        {
+            <div class="popup-overlay" @onclick="() => showInfo = false"></div>
+
+            <div class="d-flex justify-content-center">
+                <div class="popup-content">
+                    <div class="popup-inner">
+                        <div class="popup-left">
+                            <div @onclick="PickImage" class="preview-box">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-file-plus" viewBox="0 0 16 16">
+                                    <path d="M8.5 6a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V10a.5.5 0 0 0 1 0V8.5H10a.5.5 0 0 0 0-1H8.5z" />
+                                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1" />
+                                </svg>
+                                @if (!string.IsNullOrEmpty(itemModel.ImageBase64))
+                                {
+                                    <img src="data:image/png;base64,@itemModel.ImageBase64" alt="Preview" />
+                                }
+                            </div>
+                            <p class="popup-caption">Equipment Preview</p>
+                        </div>
+                        <div class="popup-right">
+                            <label>Name</label>
+                            <input class="popup-input" readonly value="@itemModel.Title" />
+
+                            <label>Description</label>
+                            <input class="popup-input" readonly value="@itemModel.Description" />
+
+                            <label>Category</label>
+                            <input class="popup-input" readonly value="@itemModel.Category" />
+
+                            <label>Daily Rental Cost</label>
+                            <input class="popup-input" readonly value="@itemModel.Cost" />
+
+                            <div class="text-center mt-3">
+                                <button class="popup-close" @onclick="() => showInfo = false">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     }
 </div>
 
 @code{
+    private bool showInfo = false;
+    private ItemModel itemModel { get; set; } = new ItemModel();
+    private List<ItemModel> items = ItemModelManager.GetItems();
+    private List<string> categories = ItemModelManager.GetCategories();
+    private string selected = null!;
 
-    List<ItemModel> items = ItemModelManager.GetItems();
+    void SetSelected(string value)
+    {
+        showInfo = true;
+        var res = items.Find(e => e.Id == value);
+        if (res != null)
+        {
+            itemModel = res;
+        }
+        selected = value;
+    }
+    private async Task PickImage()
+    {
+        try
+        {
+            FileResult file = await FilePicker.PickAsync(new PickOptions
+                {
+                    PickerTitle = "Select an image",
+                    FileTypes = FilePickerFileType.Images
+                });
 
+            if (file != null)
+            {
+                using Stream stream = await file.OpenReadAsync();
+                using MemoryStream ms = new MemoryStream();
+                await stream.CopyToAsync(ms);
+                byte[] imageBytes = ms.ToArray();
 
+                // Store in base64 (for preview or saving later)
+                itemModel.ImageBase64 = Convert.ToBase64String(imageBytes);
+            }
+        }
+        catch (Exception ex)
+        {
+            ItemModelManager.errorMessage = $"Image upload failed: {ex.Message}";
+        }
+    }
 }
 
