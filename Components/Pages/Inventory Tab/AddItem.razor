@@ -1,26 +1,25 @@
 ﻿@page "/addItem"
-
 <div class="d-flex justify-content-between">
-    <div class="image-pick">
+    <div class="preview-container">
+        <div class="preview-box"></div>
         <p>Equipment Preview</p>
     </div>
-    <div class="image-pick">
+    <div class="form-container">
         <EditForm Model="@itemModel">
             <div class="form-group mb-3">
                 <label for="title">Title</label>
                 <InputText id="title" class="form-control" @bind-Value="itemModel.Title" />
             </div>
-
-            <div class="form-group mb-3">
-                <label for="category">Category </label>
+            <label for="category">Category </label>
+            <div class="d-flex flex-nowrap form-group mb-3">
                 <InputSelect class="form-select" @bind-Value="itemModel.Category">
-                    @foreach (string category in ItemModelManager.categories)
+                    <option value="" disabled selected>Select a category</option>
+                    @foreach (string category in categories)
                     {
                         <option value=@category>@category</option>
                     }
-                    <option>Any...</option>
                 </InputSelect>
-                <button class="btn-primary" @onclick="() => AddCategory()">Add Category</button>
+            <button class="text-dark btn-primary" @onclick="() => AddCategory()">Add Category</button>
             </div>
 
             <div class="form-group mb-3">
@@ -39,6 +38,9 @@
         </EditForm>
     </div>
 </div>
+<div class="d-flex justify-content-center">
+    <NavLink class="btn btn-secondary" href="inventory">Back</NavLink>
+</div>
 
 @if (!string.IsNullOrEmpty(ItemModelManager.errorMessage))
 {
@@ -49,8 +51,8 @@
 
 @code {
     private ItemModel itemModel { get; set; } = new ItemModel();
-    private ItemModelManager itemManager = new ItemModelManager();
-    private List<ItemModel> items = ItemModelManager.items;
+    private List<ItemModel> items = ItemModelManager.GetItems();
+    private List<string> categories = ItemModelManager.GetCategories();
 
     public async Task AddsItem()
     {
@@ -64,8 +66,8 @@
             else
             {
                 ItemModelManager.errorMessage = "";
-                ItemModelManager.items.Add(itemModel);
-                ItemModelManager.AddItem();
+                items.Add(itemModel);
+                ItemModelManager.AddItem(items);
                 await App.Current.MainPage.DisplayAlert("Success", $"{message}", "OK");
             }
         }
@@ -89,7 +91,7 @@
             }
             else
             {
-                ItemModelManager.categories.Add(result);
+                categories.Add(result);
                 return;
             }
             ItemModelManager.errorMessage = "";

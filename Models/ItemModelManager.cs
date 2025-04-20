@@ -10,15 +10,12 @@ namespace Renting.Models
     public class ItemModelManager
     {
         public static string JSONPATH = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\Resources\Res\items_data.json");
-        public static List<ItemModel> items = new List<ItemModel>();
-        public static List<string> categories = new List<string>();
         public static string errorMessage = "";
 
-        public static void AddItem()
+        public static void AddItem(List<ItemModel> items)
         {
             try
             {
-                ItemModelManager.GetItems();
                 ItemModelManager.GetCategories();
                 string content = JsonSerializer.Serialize(items);
                 File.WriteAllText(JSONPATH, content);
@@ -29,47 +26,48 @@ namespace Renting.Models
             }
         }
 
-        public static void GetItems()
+        public static List<ItemModel> GetItems()
         {
-
+            List<ItemModel> items = new List<ItemModel>();
             try
             {
                 if (File.Exists(JSONPATH) == true)
                 {
                     var content = File.ReadAllText(JSONPATH);
-
-                    if (content != null)
-                    {
-                        var filecontent = JsonSerializer.Deserialize<List<ItemModel>>(content);
-                        items.AddRange(filecontent);
-                    }
-
+                    var filecontent = JsonSerializer.Deserialize<List<ItemModel>>(content);
+                    items.AddRange(filecontent);
+                    return items;
                 }
                 else
                 {
-                    File.Create(JSONPATH).Close();
+                    File.Create(JSONPATH);
+                    return items;
                 }
             }
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
+                return items;
             }
 
         }
-        public static void GetCategories()
+        public static List<string> GetCategories()
         {
+            HashSet<string> uniqueCategories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             try
             {
-                ItemModelManager.GetItems();
-                foreach (ItemModel item in items)
+                foreach (ItemModel item in ItemModelManager.GetItems())
                 {
-                    categories.Add(item.Category);
+                    if (!string.IsNullOrWhiteSpace(item.Category))
+                        uniqueCategories.Add(item.Category);
                 }
                 errorMessage = "";
+                return uniqueCategories.ToList();
             }
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
+                return uniqueCategories.ToList();
             }
         }
     }
