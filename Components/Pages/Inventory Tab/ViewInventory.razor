@@ -2,31 +2,31 @@
 
 <h3>Inventory</h3>
 
-<div class="d-flex">
-    <div class="d-flex justify-content-evenly">
-        <div class="image-pick">
-            <div class="image-border"></div>
-            <p class="text-center">Equipment Preview</p>
+<div class="grid-container">
+    @if(items.Count <= 1)
+    {
+        <div class="card">
+            <div class="card-image">
+                <img src="your-image.jpg" alt="Equipment" />
+            </div>
+            <div class="card-label">Equipment Preview</div>
         </div>
-        <div class="image-pick">
-            <div class="image-border"></div>
-            <p>Equipment Preview</p>
-        </div>
-        <div class="image-pick">
-            <div class="image-border"></div>
-            <p>Equipment Preview</p>
-        </div>
-        <div class="image-pick">
-            <div class="image-border"></div>
-            <p>Equipment Preview</p>
-        </div>
-    </div>
+    }
+    else
+    {
+        @foreach (ItemModel item in items)
+        {
+            <div class="card">
+                <div class="card-image">
+                    <img src="your-image.jpg" alt="Equipment" />
+                </div>
+                <div class="card-label">Equipment Preview</div>
+            </div>
+        }
+    }
 </div>
 
-@code {
-    private ItemModel itemModel;
-    private ItemModelManager itemManager = new ItemModelManager();
-
-
+@code{
+    List<ItemModel> items = ItemModelManager.GetItems();
 }
 
