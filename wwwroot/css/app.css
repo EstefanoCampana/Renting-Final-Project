@@ -38,8 +38,15 @@ a, .btn-link {
 }
 
 .image-pick {
-    margin: 50 50 50 50;
+    margin: 50px 50px 50px 50px;
+    padding: 50px 50px 50px 50px;
     background-color: #D9D9D9;
+}
+
+.image-border {
+    padding: 50px 100px 50px 100px;
+    background-color: #000f;
+    opacity:0.2;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
