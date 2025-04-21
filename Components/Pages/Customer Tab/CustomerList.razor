@@ -1,0 +1,66 @@
+﻿@page "/customerList"
+@using Renting.Models
+@inject NavigationManager NavManager
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div style="width: 100px;">
+        <button class="btn btn-info w-100" @onclick="GoBack">← Back</button>
+    </div>
+
+    <div class="text-center flex-grow-1">
+        <h2 class="fw-bold m-0">Customers</h2>
+    </div>
+
+    <div style="width: 100px;">
+        <NavLink class="btn btn-primary w-100" href="/addCustomer">Add</NavLink>
+    </div>
+</div>
+
+@if (!CustomerStorage.Customers.Any())
+{
+    <p>No customers found.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead class="table-primary">
+            <tr>
+                <th class="fs-5">ID</th>
+                <th class="fs-5">Name</th>
+                <th class="fs-5">Phone</th>
+                <th class="fs-5">Email</th>
+                <th class="fs-5">Banned</th>
+                <th class="fs-5">Discount</th>
+                <th class="fs-5">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in CustomerStorage.Customers)
+            {
+                <tr class="@(customer.IsBanned ? "text-danger fw-bold" : "")">
+                    <td>@customer.CustomerId</td>
+                    <td>@customer.GetFullName()</td>
+                    <td>@customer.ContactNumber</td>
+                    <td>@customer.Email</td>
+                    <td>@(customer.IsBanned ? "Yes" : "No")</td>
+                    <td>@(customer.HasDiscount ? "Yes" : "No")</td>
+                    <td>
+                        <button class="btn btn-sm btn-fourth" @onclick="() => EditCustomer(customer.CustomerId)">Update</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private void EditCustomer(int id)
+    {
+        NavManager.NavigateTo($"/updateCustomer/{id}");
+    }
+
+    private void GoBack()
+    {
+        NavManager.NavigateTo("/customerMain");
+    }
+}
