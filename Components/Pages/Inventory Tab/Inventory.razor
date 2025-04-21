@@ -1,7 +1,12 @@
 ﻿@page "/inventory"
+@inject NavigationManager NavManager
 
-<div class="d-flex justify-content-center pb-5">
-    <h1 class="fw-bold">Inventory</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <button class="btn btn-info" @onclick="GoBack">← Back</button>
+
+    <h1 class="fw-bold text-center flex-grow-1 m-0">Inventory</h1>
+
+    <div style="width: 100px;"></div>
 </div>
 
 <div class="d-flex justify-content-around">
@@ -12,3 +17,10 @@
         <NavLink class="btn btn-secondary btn-lg w-100" href="viewInv">View Inventory</NavLink>
     </div>
 </div>
+
+@code{
+    private void GoBack() //for back button
+    {
+        NavManager.NavigateTo("/");
+    }
+}
