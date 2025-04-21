@@ -2,8 +2,12 @@
 @using Renting.Models
 @inject NavigationManager NavManager
 
-<div class="d-flex justify-content-center pb-5">
-    <h2 class="fw-bold">Update Customer</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <button class="btn btn-info" @onclick="GoBack">← Back</button>
+
+    <h2 class="fw-bold text-center flex-grow-1 m-0">Customer Registration</h2>
+
+    <div style="width: 100px;"></div>
 </div>
 
 @if (editCustomer == null)
@@ -56,6 +60,11 @@ else
 }
 
 @code {
+    private void GoBack()
+    {
+        NavManager.NavigateTo("/customerList");
+    }
+
     [Parameter] public int CustomerId { get; set; }
     private Customer? editCustomer;
 
