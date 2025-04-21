@@ -1,0 +1,51 @@
+﻿@page "/customerList"
+@using Renting.Models
+@inject NavigationManager NavManager
+
+<div class="d-flex justify-content-center pb-5">
+    <h1 class="fw-bold">Customers</h1>
+</div>
+
+@if (!CustomerStorage.Customers.Any())
+{
+    <p>No customers found.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead class="table-primary">
+            <tr>
+                <th class="fs-5">ID</th>
+                <th class="fs-5">Name</th>
+                <th class="fs-5">Phone</th>
+                <th class="fs-5">Email</th>
+                <th class="fs-5">Banned</th>
+                <th class="fs-5">Discount</th>
+                <th class="fs-5">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in CustomerStorage.Customers)
+            {
+                <tr class="@(customer.IsBanned ? "text-danger fw-bold" : "")">
+                    <td>@customer.CustomerId</td>
+                    <td>@customer.GetFullName()</td>
+                    <td>@customer.ContactNumber</td>
+                    <td>@customer.Email</td>
+                    <td>@(customer.IsBanned ? "Yes" : "No")</td>
+                    <td>@(customer.HasDiscount ? "Yes" : "No")</td>
+                    <td>
+                        <button class="btn btn-sm btn-fourth" @onclick="() => EditCustomer(customer.CustomerId)">Update</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private void EditCustomer(int id)
+    {
+        NavManager.NavigateTo($"/updateCustomer/{id}");
+    }
+}

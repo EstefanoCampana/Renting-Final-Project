@@ -1,0 +1,71 @@
+﻿@page "/updateCustomer/{CustomerId:int}"
+@using Renting.Models
+@inject NavigationManager NavManager
+
+<div class="d-flex justify-content-center pb-5">
+    <h1 class="fw-bold">Update Customer</h1>
+</div>
+
+@if (editCustomer == null)
+{
+    <p>Customer not found.</p>
+}
+else
+{
+    <div class="border p-4 rounded shadow-sm bg-light">
+        <EditForm Model="editCustomer" OnValidSubmit="SaveChanges">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label text-center w-100">First Name</label>
+                    <InputText @bind-Value="editCustomer.FirstName" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-center w-100">Last Name</label>
+                    <InputText @bind-Value="editCustomer.LastName" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label text-center w-100">Contact Number</label>
+                <InputText @bind-Value="editCustomer.ContactNumber" class="form-control" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label text-center w-100">Email</label>
+                <InputText @bind-Value="editCustomer.Email" class="form-control" />
+            </div>
+
+            <div class="form-check mb-3">
+                <InputCheckbox class="form-check-input" @bind-Value="editCustomer.IsBanned" />
+                <label class="form-check-label">Banned</label>
+            </div>
+
+            <div class="form-check mb-3">
+                <InputCheckbox class="form-check-input" @bind-Value="editCustomer.HasDiscount" />
+                <label class="form-check-label">Has 10% Discount</label>
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-fourth" type="submit">Update</button>
+            </div>
+        </EditForm>
+    </div>
+}
+
+@code {
+    [Parameter] public int CustomerId { get; set; }
+    private Customer? editCustomer;
+
+    protected override void OnInitialized()
+    {
+        editCustomer = CustomerStorage.Customers.FirstOrDefault(c => c.CustomerId == CustomerId);
+    }
+
+    private void SaveChanges()
+    {
+        NavManager.NavigateTo("/customerList");
+    }
+}

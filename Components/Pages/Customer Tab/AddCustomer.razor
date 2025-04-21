@@ -1,6 +1,6 @@
 ﻿@page "/addCustomer"
-@using System.ComponentModel.DataAnnotations
 @using Renting.Models
+@inject NavigationManager NavManager
 
 <div class="d-flex justify-content-center pb-5">
     <h1 class="fw-bold">Customer Registration</h1>
@@ -37,35 +37,28 @@
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Add Customer</button>
         </div>
-
     </EditForm>
 </div>
 
 @code {
     private Customer customer = new();
 
-    public class Customer
-    {
-        [Required(ErrorMessage = "First name is required")]
-        public string FirstName { get; set; }
-
-        [Required(ErrorMessage = "Last name is required")]
-        public string LastName { get; set; }
-
-        [Required(ErrorMessage = "Contact number is required")]
-        [Phone(ErrorMessage = "Invalid phone number")]
-        public string ContactNumber { get; set; }
-
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email address")]
-        public string Email { get; set; }
-    }
-
     private void HandleValidSubmit()
     {
-        Console.WriteLine($"Submitted: {customer.FirstName} {customer.LastName}");
-    }
+        var rand = new Random();
+        int generatedId;
+        do
+        {
+            generatedId = rand.Next(1000, 9999);
+        } while (CustomerStorage.Customers.Any(c => c.CustomerId == generatedId));
 
+        customer.CustomerId = generatedId;
+        CustomerStorage.Customers.Add(customer);
+
+        customer = new();
+        NavManager.NavigateTo("/customerList");
+
+    }
 }
