@@ -5,9 +5,14 @@ namespace Renting.Models
     public class Customer
     {
         public int CustomerId { get; set; }
+        [Required(ErrorMessage = "First Name is required.")]
         public string FirstName { get; set; }
+        [Required(ErrorMessage = "Last Name is required.")]
         public string LastName { get; set; }
+        [Required(ErrorMessage = "Contact Number is required.")]
         public string ContactNumber { get; set; }
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Enter a valid email address.")]
         public string Email { get; set; }
 
         // handwritten notes for if customer is banned or is eligible for a discount
