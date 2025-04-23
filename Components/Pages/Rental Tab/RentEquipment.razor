@@ -1,0 +1,47 @@
+﻿@page "/rentEquipment"
+@inject NavigationManager NavManager
+
+<h3>Rent Equipment</h3>
+
+@if (equipmentList.Any())
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+        @foreach (var item in equipmentList)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text">@item.Description</p>
+                        <button class="btn btn-primary" @onclick="() => Rent(item)">Rent</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No equipment available.</p>
+}
+
+@code {
+    private List<Equipment> equipmentList = new()
+    {
+        new Equipment { Id = 1, Name = "Drill", Description = "Powerful electric drill" },
+        new Equipment { Id = 2, Name = "Ladder", Description = "12ft aluminum ladder" },
+        new Equipment { Id = 3, Name = "Hammer", Description = "Standard claw hammer" }
+    };
+
+    private void Rent(Equipment item)
+    {
+        NavManager.NavigateTo($"/searchCustomer/{item.Id}");
+    }
+
+    public class Equipment
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+}

@@ -1,0 +1,61 @@
+﻿@page "/rentalDetails/{RentalId:int}"
+@inject NavigationManager NavManager
+
+<h3>Rental Details</h3>
+
+@if (rental != null)
+{
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">@rental.Equipment?.Name</h5>
+            <p class="card-text">@rental.Equipment?.Description</p>
+            <p class="card-text"><strong>Customer:</strong> @rental.Customer?.FirstName @rental.Customer?.LastName</p>
+            <p class="card-text"><strong>Rented On:</strong> @rental.RentalDate.ToShortDateString()</p>
+            <p class="card-text"><strong>Expected Return:</strong> @rental.ExpectedReturnDate.ToShortDateString()</p>
+            <p class="card-text"><strong>Status:</strong> @rental.Status</p>
+        </div>
+    </div>
+}
+else
+{
+    <p>Loading rental details...</p>
+}
+
+<button class="btn btn-secondary mt-3" @onclick="GoBack">← Back</button>
+
+@code {
+    [Parameter] public int RentalId { get; set; }
+
+    private Rental rental;
+
+    protected override void OnInitialized()
+    {
+        rental = RentalStorage.FirstOrDefault(r => r.RentalId == RentalId);
+        if (rental != null)
+        {
+            rental.Customer = CustomerList.FirstOrDefault(c => c.CustomerId == rental.CustomerId);
+            rental.Equipment = EquipmentList.FirstOrDefault(e => e.Id == rental.EquipmentId);
+        }
+    }
+
+    private void GoBack() => NavManager.NavigateTo("/viewActiveRentals");
+
+    // Sample mock storage
+    private static List<Customer> CustomerList = new();
+    private static List<Equipment> EquipmentList = new();
+    private static List<Rental> RentalStorage = new();
+
+    public class Equipment { public int Id; public string Name; public string Description; }
+    public class Customer { public int CustomerId; public string FirstName; public string LastName; }
+    public class Rental
+    {
+        public int RentalId;
+        public int CustomerId;
+        public Customer Customer;
+        public int EquipmentId;
+        public Equipment Equipment;
+        public DateTime RentalDate;
+        public DateTime ExpectedReturnDate;
+        public string Status;
+    }
+}
