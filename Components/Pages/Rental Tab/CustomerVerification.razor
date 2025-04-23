@@ -1,0 +1,58 @@
+﻿@page "/customerVerification"
+@using Renting.Models
+@inject NavigationManager NavManager
+
+<h3>Customer Verification</h3>
+
+@if (customer != null)
+{
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title">@customer.FirstName @customer.LastName</h5>
+            <p class="card-text"><strong>Customer ID:</strong> @customer.CustomerId</p>
+            <p class="card-text"><strong>Email:</strong> @customer.Email</p>
+            <p class="card-text"><strong>Phone:</strong> @customer.ContactNumber</p>
+            <button class="btn btn-success" @onclick="CompleteVerification">Complete Verification</button>
+        </div>
+    </div>
+}
+else
+{
+    <div class="form-group">
+        <label for="customerId">Enter Customer ID:</label>
+        <input type="number" class="form-control" id="customerId" @bind="customerId" />
+        <button class="btn btn-primary mt-3" @onclick="VerifyCustomer">Verify</button>
+    </div>
+
+    @if (verificationFailed)
+    {
+        <div class="alert alert-danger mt-3">
+            <strong>Error:</strong> Customer not found.
+        </div>
+    }
+}
+
+<button class="btn btn-secondary mt-3" @onclick="GoBack">← Back</button>
+
+@code {
+    private int customerId;
+    private Customer customer;
+    private bool verificationFailed;
+
+    private void VerifyCustomer()
+    {
+        customer = CustomerStorage.Customers.FirstOrDefault(c => c.CustomerId == customerId);
+
+        verificationFailed = customer == null;
+    }
+
+    private void CompleteVerification()
+    {
+        NavManager.NavigateTo("/viewActiveRentals");
+    }
+
+    private void GoBack()
+    {
+        NavManager.NavigateTo("/viewActiveRentals");
+    }
+}

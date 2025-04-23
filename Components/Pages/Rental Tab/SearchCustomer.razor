@@ -1,0 +1,62 @@
+﻿@page "/searchCustomer/{EquipmentId:int}"
+@inject NavigationManager NavManager
+
+<h3>Search Customer</h3>
+
+<div class="input-group my-3">
+    <input type="text" class="form-control" placeholder="Enter customer name..." @bind="searchTerm" />
+    <button class="btn btn-primary" @onclick="Search">Search</button>
+</div>
+
+@if (filteredCustomers.Any())
+{
+    <ul class="list-group">
+        @foreach (var customer in filteredCustomers)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @customer.FirstName @customer.LastName
+                <button class="btn btn-success btn-sm" @onclick="() => SelectCustomer(customer)">Select</button>
+            </li>
+        }
+    </ul>
+}
+else if (hasSearched)
+{
+    <p>No matching customers found.</p>
+}
+
+@code {
+    [Parameter] public int EquipmentId { get; set; }
+
+    private string searchTerm = string.Empty;
+    private bool hasSearched = false;
+
+    private List<Customer> allCustomers = new()
+    {
+        new Customer { CustomerId = 1, FirstName = "Alice", LastName = "Johnson" },
+        new Customer { CustomerId = 2, FirstName = "Bob", LastName = "Smith" },
+        new Customer { CustomerId = 3, FirstName = "Charlie", LastName = "Brown" }
+    };
+
+    private List<Customer> filteredCustomers = new();
+
+    private void Search()
+    {
+        hasSearched = true;
+        filteredCustomers = allCustomers
+            .Where(c => $"{c.FirstName} {c.LastName}".Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    private void SelectCustomer(Customer customer)
+    {
+        NavManager.NavigateTo($"/rentalDetails/999"); // Replace with real rental ID or flow
+    }
+
+    public class Customer
+    {
+        public int CustomerId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
+}

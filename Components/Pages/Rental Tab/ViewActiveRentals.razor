@@ -1,0 +1,61 @@
+﻿@page "/viewActiveRentals"
+@inject NavigationManager NavManager
+
+<h3>Active Rentals</h3>
+
+@if (activeRentals.Any())
+{
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Rental ID</th>
+                <th>Equipment</th>
+                <th>Customer</th>
+                <th>Rental Date</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rental in activeRentals)
+            {
+                <tr>
+                    <td>@rental.RentalId</td>
+                    <td>@rental.EquipmentName</td>
+                    <td>@rental.CustomerName</td>
+                    <td>@rental.RentalDate.ToShortDateString()</td>
+                    <td>@rental.Status</td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm" @onclick="() => ViewDetails(rental.RentalId)">Details</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No active rentals at the moment.</p>
+}
+
+@code {
+    private List<Rental> activeRentals = new()
+    {
+        new Rental { RentalId = 1, EquipmentName = "Drill", CustomerName = "Alice Johnson", RentalDate = DateTime.Today, Status = "Ongoing" },
+        new Rental { RentalId = 2, EquipmentName = "Hammer", CustomerName = "Bob Smith", RentalDate = DateTime.Today.AddDays(-2), Status = "Ongoing" }
+    };
+
+    private void ViewDetails(int rentalId)
+    {
+        NavManager.NavigateTo($"/rentalDetails/{rentalId}");
+    }
+
+    public class Rental
+    {
+        public int RentalId { get; set; }
+        public string EquipmentName { get; set; }
+        public string CustomerName { get; set; }
+        public DateTime RentalDate { get; set; }
+        public string Status { get; set; }
+    }
+}
