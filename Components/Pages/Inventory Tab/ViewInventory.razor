@@ -3,8 +3,15 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <button class="btn btn-info" @onclick="GoBack">← Back</button>
+    @if (!unused)
+    {
+        <h2 class="fw-bold text-center flex-grow-1 m-0">Inventory</h2>
+    }
+    else
+    {
+        <h2 class="fw-bold text-center flex-grow-1 m-0">Broken Items</h2>
+    }
 
-    <h2 class="fw-bold text-center flex-grow-1 m-0">Inventory</h2>
 
     <div style="width: 100px;"></div>
 </div>
@@ -12,9 +19,19 @@
 <div class="page-controls">
     <div class="header-controls">
         <div></div>
-        <div class="search-sort">
-            <div @onclick="() => unused = !unused">Broken Items</div>
-        </div>
+        @if (!unused)
+        {
+            <div class="search-sort">
+                <div @onclick="() => unused = !unused">Broken Items</div>
+            </div>
+        }
+        else
+        {
+            <div class="search-sort">
+                <div @onclick="() => unused = !unused">Inventory</div>
+            </div>
+        }
+
     </div>
 
     <div class="grid-container">
@@ -249,6 +266,7 @@
                 };
 
             brokenItems.Add(newItem);
+            items.Remove(itemModel);
             ItemModelManager.DeleteItem(newItem);
             ItemModelManager.AddBrokenItem(brokenItems);
             await App.Current.MainPage.DisplayAlert("Success", "The item has been succesfully deleted.", "OK");
